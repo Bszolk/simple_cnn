@@ -2,33 +2,44 @@ import numpy as np
 
 
 class Optimizer:
-    def __init__(self, learning_rate=0.001):
-        self.learning_rate = learning_rate
+    """
+    Used to update weights of the model
+    """
+    def __init__(self, learning_rate: float = 0.001) -> None:
+        self.learning_rate: float = learning_rate
 
-    def optimize(self, weights, gradient):
+    def optimize(self, weights: np.ndarray, gradient: np.ndarray) -> np.ndarray:
+        """
+        Calculates and returns new layer's weights
+
+        :param weights: weights of the model to be updated
+        :param gradient: gradient of the loss w.r.t. the layer's weights
+        :return: new weights, after the update
+        """
         pass
 
 
-class Default(Optimizer):
-    def __init__(self, learning_rate=0.001):
+class SGD(Optimizer):
+    def __init__(self, learning_rate: float = 0.001) -> None:
         super().__init__(learning_rate)
 
-    def optimize(self, weights, gradient):
+    def optimize(self, weights: np.ndarray, gradient: np.ndarray) -> np.ndarray:
         return weights - self.learning_rate * gradient
 
 
 class Adam(Optimizer):
-    def __init__(self, learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-8):
+    def __init__(self, learning_rate: float = 0.001, beta1: float = 0.9, beta2: float = 0.999,
+                 epsilon: float = 1e-8) -> None:
         super().__init__(learning_rate)
-        self.beta1 = beta1
-        self.beta2 = beta2
-        self.epsilon = epsilon
+        self.beta1: float = beta1
+        self.beta2: float = beta2
+        self.epsilon: float = epsilon
 
-        self.m = 0
-        self.v = 0
-        self.t = 0
+        self.m: np.ndarray = np.array([0])
+        self.v: np.ndarray = np.array([0])
+        self.t: int = 0
 
-    def optimize(self, weights, gradient):
+    def optimize(self, weights: np.ndarray, gradient: np.ndarray) -> np.ndarray:
         self.t += 1
         self.m = self.beta1 * self.m + (1 - self.beta1) * gradient
         self.v = self.beta2 * self.v + (1 - self.beta2) * (gradient * gradient)
